@@ -62,7 +62,6 @@ contract FundSubscription is Script {
         console.log("Creating subscription id on chain", block.chainid);
 
         if (block.chainid == 31337) {
-            // local chain
             vm.startBroadcast();
             VRFCoordinatorV2Mock(vrfCoordinator).fundSubscription(
                 subId,
