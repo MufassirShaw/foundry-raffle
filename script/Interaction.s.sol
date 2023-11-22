@@ -33,9 +33,9 @@ contract CreateSubscription is Script {
 }
 
 contract FundSubscription is Script {
-    uint96 public constant FUND_AMOUNT = 4 ether;
+    uint96 public constant FUND_AMOUNT = 1000000 ether;
 
-    function fundSubscriptionUsingConfig() private returns (uint64) {
+    function fundSubscriptionUsingConfig() private {
         HelperConfig helperConfig = new HelperConfig();
 
         (
@@ -48,19 +48,17 @@ contract FundSubscription is Script {
             address link
         ) = helperConfig.activeConfig();
 
-        return fundSubscription(vrfCoordinator, subcriptionId, link);
+        fundSubscription(vrfCoordinator, subcriptionId, link);
     }
 
     function fundSubscription(
         address vrfCoordinator,
         uint64 subId,
         address link
-    ) public returns (uint64 subscriptionId) {
-        console.log("using vrf-coordinator", vrfCoordinator);
-        console.log("using subId", subId);
-        console.log("using link", link);
-        console.log("Creating subscription id on chain", block.chainid);
-
+    ) public {
+        console.log("Funding subscription: ", subId);
+        console.log("Using vrfCoordinator: ", vrfCoordinator);
+        console.log("On ChainID: ", block.chainid);
         if (block.chainid == 31337) {
             vm.startBroadcast();
             VRFCoordinatorV2Mock(vrfCoordinator).fundSubscription(
@@ -81,11 +79,19 @@ contract FundSubscription is Script {
             );
             vm.stopBroadcast();
         }
-        console.log("Your subscription id is ", subscriptionId);
+
+        (uint96 balance, , address owner, ) = VRFCoordinatorV2Mock(
+            vrfCoordinator
+        ).getSubscription(subId);
+        console.log("############################");
+        console.log("Subscription id details", subId);
+        console.log("Subscription balance", balance);
+        console.log("Subscription owner", owner);
+        console.log("############################");
     }
 
-    function run() external returns (uint64) {
-        return fundSubscriptionUsingConfig();
+    function run() external {
+        fundSubscriptionUsingConfig();
     }
 }
 

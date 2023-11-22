@@ -51,8 +51,8 @@ contract HelperConfig is Script {
             baseFee,
             gasFee
         );
-        vm.stopBroadcast();
         LinkToken link = new LinkToken();
+        vm.stopBroadcast();
         return
             NetworkConfig({
                 enteranceFee: 0.01 ether,
@@ -60,7 +60,7 @@ contract HelperConfig is Script {
                 vrfCoordinator: address(vrfCoordinator),
                 gasLane: 0x474e34a077df58807dbe9c96d3c009b23b3c6d0cce433e59bbf5b34f823bc56c,
                 subcriptionId: 0,
-                callbackGasLimit: 50000,
+                callbackGasLimit: 500000,
                 link: address(link)
             });
     }

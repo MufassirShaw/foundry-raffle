@@ -28,11 +28,10 @@ contract RaffleTest is Test {
     address link;
 
     modifier raffleEnteredAndTimePassed() {
-        vm.startPrank(PLAYER);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: enteranceFee}();
         vm.warp(block.timestamp + interval + 1); // `wrap` sets block time
         vm.roll(block.number + 1); // go to the next block
-
         _;
     }
 
@@ -181,5 +180,53 @@ contract RaffleTest is Test {
             requestId,
             address(raffle)
         );
+    }
+
+    function testFullFillRandomWordsPicksAWinnerResetsAndSendsMoney()
+        public
+        raffleEnteredAndTimePassed
+    {
+        // Arrange
+        uint256 additionalEntrances = 5;
+        uint256 startingIndex = 1;
+
+        for (
+            uint256 i = startingIndex;
+            i < startingIndex + additionalEntrances;
+            i++
+        ) {
+            address player = address(uint160(i));
+            hoax(player, STARTING_BALANCE);
+            raffle.enterRaffle{value: enteranceFee}();
+        }
+
+        uint256 startingTimeStamp = raffle.getRaffleLastTimeStamp();
+        uint256 startingBalance = raffle.getPlayer(0).balance;
+
+        //act
+        vm.recordLogs();
+        raffle.performUpkeep("");
+        Vm.Log[] memory logs = vm.getRecordedLogs();
+        bytes32 requestId = logs[1].topics[1];
+        VRFCoordinatorV2Mock(vrfCoordinator).fulfillRandomWords(
+            uint256(requestId),
+            address(raffle)
+        );
+
+        // Assert
+        uint256 endingTimeStamp = raffle.getRaffleLastTimeStamp();
+
+        assert(uint256(raffle.getRaffleState()) == 0);
+        assert(raffle.getNumOfPlayer() == 0);
+
+        assert(endingTimeStamp > startingTimeStamp);
+        address recentWinner = raffle.s_recentWinner();
+        uint256 prize = enteranceFee * (additionalEntrances + 1);
+        uint256 winnerEndingBalance = recentWinner.balance;
+
+        console.log("winnerEndingBalance", winnerEndingBalance);
+        console.log("prize", prize + startingBalance);
+
+        assert(prize + startingBalance == winnerEndingBalance);
     }
 }
