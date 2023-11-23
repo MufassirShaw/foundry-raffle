@@ -40,6 +40,7 @@ contract Raffle is VRFConsumerBaseV2 {
         uint256 players,
         uint256 raffleState
     );
+    error Raffle_NotEnoughTimePassed();
     /** Type Declartion */
 
     enum RaffleState {
@@ -129,7 +130,7 @@ contract Raffle is VRFConsumerBaseV2 {
             );
         }
         if (block.timestamp - s_lastTimeStamp < i_interval) {
-            revert();
+            revert Raffle_NotEnoughTimePassed();
         }
         s_raffleState = RaffleState.CALCULATING;
         uint256 requestId = i_vrfCoordinator.requestRandomWords(

@@ -17,7 +17,7 @@ contract RaffleTest is Test {
     Raffle raffle;
     HelperConfig helperConfig;
     address public PLAYER = makeAddr("player");
-    uint256 public constant STARTING_BALANCE = 10 ether;
+    uint256 public constant STARTING_BALANCE = 1 ether;
     event RequestedRaffleWinner(uint256 indexed requestId);
     uint256 enteranceFee;
     uint256 interval;
@@ -47,7 +47,8 @@ contract RaffleTest is Test {
             gasLane,
             subcriptionId,
             callbackGasLimit,
-            link
+            link,
+
         ) = helperConfig.activeConfig();
 
         vm.deal(PLAYER, STARTING_BALANCE);
