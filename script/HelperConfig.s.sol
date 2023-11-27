@@ -48,9 +48,9 @@ contract HelperConfig is Script {
             return activeConfig;
         }
         uint96 baseFee = 0.25 ether; // 0.25 Link
-        uint96 gasFee = 1e18; // 1 gwei
+        uint96 gasFee = 1e9;
 
-        vm.startBroadcast();
+        vm.startBroadcast(DEFAULT_ANVIL_KEY);
         VRFCoordinatorV2Mock vrfCoordinator = new VRFCoordinatorV2Mock(
             baseFee,
             gasFee

@@ -38,7 +38,7 @@ contract RaffleDeploy is Script {
             );
         }
 
-        vm.startBroadcast();
+        vm.startBroadcast(deployerKey);
         Raffle raffle = new Raffle(
             enteranceFee,
             interval,

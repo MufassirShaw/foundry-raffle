@@ -17,7 +17,7 @@ contract RaffleTest is Test {
     Raffle raffle;
     HelperConfig helperConfig;
     address public PLAYER = makeAddr("player");
-    uint256 public constant STARTING_BALANCE = 1 ether;
+    uint256 public constant STARTING_BALANCE = 10 ether;
     event RequestedRaffleWinner(uint256 indexed requestId);
     uint256 enteranceFee;
     uint256 interval;
@@ -32,6 +32,14 @@ contract RaffleTest is Test {
         raffle.enterRaffle{value: enteranceFee}();
         vm.warp(block.timestamp + interval + 1); // `wrap` sets block time
         vm.roll(block.number + 1); // go to the next block
+        _;
+    }
+
+    modifier skipFork() {
+        if (block.chainid != 31337) {
+            return;
+        }
+
         _;
     }
 
@@ -173,7 +181,7 @@ contract RaffleTest is Test {
 
     function testFullfillRandomWordsCanOnlyBeCalledAfterPerformUpKeep(
         uint256 requestId
-    ) public raffleEnteredAndTimePassed {
+    ) public raffleEnteredAndTimePassed skipFork {
         // Arrange
 
         vm.expectRevert("nonexistent request");
