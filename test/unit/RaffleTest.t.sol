@@ -194,6 +194,7 @@ contract RaffleTest is Test {
     function testFullFillRandomWordsPicksAWinnerResetsAndSendsMoney()
         public
         raffleEnteredAndTimePassed
+        skipFork
     {
         // Arrange
         uint256 additionalEntrances = 5;

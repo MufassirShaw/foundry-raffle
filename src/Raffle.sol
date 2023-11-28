@@ -59,7 +59,7 @@ contract Raffle is VRFConsumerBaseV2 {
     bytes32 private immutable i_gasLane;
     uint64 private immutable i_subcriptionId;
     uint32 private immutable i_callbackGasLimit;
-    uint16 private constant REQUEST_CONFIRMATION = 2;
+    uint16 private constant REQUEST_CONFIRMATION = 4;
     uint32 private constant NUM_WORDS = 2;
 
     /** Events */
