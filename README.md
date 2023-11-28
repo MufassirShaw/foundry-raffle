@@ -21,3 +21,7 @@ This code is to create a provably random smart contract lottery.
     1. Work on chain
     2. Forked testnet
     3. Forked mainnet
+
+## Deployment
+
+ Deployed on the sepolia testnet [here](https://sepolia.etherscan.io/address/0x9a6f91f0a16fef2d4619355c8d6fa00c68e5f24f)
