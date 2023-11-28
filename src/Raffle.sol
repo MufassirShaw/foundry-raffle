@@ -21,17 +21,18 @@
 
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.19;
 
 import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
-import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/vrf/VRFConsumerBaseV2.sol";
+import {VRFConsumerBaseV2} from "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
+import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol";
 
 /// @title A simple Raffle contract
 /// @author Mufassir shah
 /// @notice This contract is for creating a simple raffle
 /// @dev Uses Chainlink VRFv2 and Chainlink automation
 
-contract Raffle is VRFConsumerBaseV2 {
+contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
     error Raffle_NotEnoughEthSent();
     error Raffle_TransferFailed();
     error Raffle_RaffleNotOpen();
@@ -106,9 +107,14 @@ contract Raffle is VRFConsumerBaseV2 {
         3. The contract has enough ETH
         4. The subcription is funded with LINK
      */
-    function checkUpKeep(
-        bytes memory /* calldata*/
-    ) public view returns (bool upKeepNeeded, bytes memory /*performData */) {
+    function checkUpkeep(
+        bytes memory /* checkData */
+    )
+        public
+        view
+        override
+        returns (bool upKeepNeeded, bytes memory /*performData */)
+    {
         bool timeHasPassed = block.timestamp - s_lastTimeStamp >= i_interval;
         bool isOpen = s_raffleState == RaffleState.OPEN;
         bool hasEth = address(this).balance > 0;
@@ -118,9 +124,9 @@ contract Raffle is VRFConsumerBaseV2 {
         return (upKeepNeeded, "0x0");
     }
 
-    function performUpkeep(bytes calldata /*performData */) external {
+    function performUpkeep(bytes calldata /* performData */) external override {
         // check to see if enough time has passed
-        (bool upKeepNeeded, ) = checkUpKeep("");
+        (bool upKeepNeeded, ) = checkUpkeep("");
 
         if (!upKeepNeeded) {
             revert Raffle_UpKeepNotNeeded(

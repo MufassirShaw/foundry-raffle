@@ -95,36 +95,36 @@ contract RaffleTest is Test {
     }
 
     ////////////////
-    // CheckUpKeep //
+    // checkUpkeep //
     ////////////////
 
-    function testCheckUpKeepReturnsFalseIfItHasNoBalance() public {
+    function testcheckUpkeepReturnsFalseIfItHasNoBalance() public {
         vm.warp(block.timestamp + interval + 1); // `wrap` sets block time
         vm.roll(block.number + 1); // go to the next block
 
-        (bool upKeepNeeded, ) = raffle.checkUpKeep("");
+        (bool upKeepNeeded, ) = raffle.checkUpkeep("");
         assert(!upKeepNeeded);
     }
 
-    function testCheckUpKeepReturnsFalseIfItIsNotOpen()
+    function testcheckUpkeepReturnsFalseIfItIsNotOpen()
         public
         raffleEnteredAndTimePassed
     {
         // act
         raffle.performUpkeep("");
-        (bool upKeepNeeded, ) = raffle.checkUpKeep("");
+        (bool upKeepNeeded, ) = raffle.checkUpkeep("");
 
         //assert
         assert(!upKeepNeeded);
     }
 
-    function testCheckUpKeepReturnsFalseIfNotEnoughTimeHasPassed() public {
+    function testcheckUpkeepReturnsFalseIfNotEnoughTimeHasPassed() public {
         // arrange
         vm.startPrank(PLAYER);
         raffle.enterRaffle{value: enteranceFee}();
 
         // act
-        (bool upKeepNeeded, ) = raffle.checkUpKeep("");
+        (bool upKeepNeeded, ) = raffle.checkUpkeep("");
 
         //assert
         assert(!upKeepNeeded);

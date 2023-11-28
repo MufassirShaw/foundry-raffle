@@ -24,4 +24,4 @@ This code is to create a provably random smart contract lottery.
 
 ## Deployment
 
- Deployed on the sepolia testnet [here](https://sepolia.etherscan.io/address/0x9a6f91f0a16fef2d4619355c8d6fa00c68e5f24f)
+ Deployed on the sepolia testnet [here](https://sepolia.etherscan.io/address/0xa92f8e60c1a83e93187dba55a0ad4b89447fc3e2)
